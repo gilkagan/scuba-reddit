@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">scubareddit</string>
+    <string name="tabs_favorites">Favorites</string>
+    <string name="tabs_listing">Scuba</string>
+    <string name="activity_view">Viewing Content</string>
+    <string name="reddit_name">scuba</string>
+</resources>
