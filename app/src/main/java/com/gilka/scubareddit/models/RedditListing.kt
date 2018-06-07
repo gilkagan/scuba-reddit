@@ -10,7 +10,6 @@ data class RedditListing(
         val entries: List<RedditEntry>) : Parcelable {
 
     companion object {
-        @JvmField @Suppress("unused")
         val CREATOR = createParcel { RedditListing(it) }
     }
 

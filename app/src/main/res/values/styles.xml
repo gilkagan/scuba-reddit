@@ -3,10 +3,23 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="cardViewStyle">@style/CardView</item>
+    </style>
+
+    <style name="AppTheme.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/primary_dark</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="searchViewStyle">@style/AppTheme.Toolbar.SearchView</item>
+        <item name="android:editTextColor">@color/text</item>
+    </style>
+
+    <style name="AppTheme.Toolbar.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@android:drawable/ic_menu_search</item>
     </style>
 
 </resources>

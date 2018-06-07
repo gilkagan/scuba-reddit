@@ -11,7 +11,6 @@ data class RedditEntry(
 ) : Parcelable, AdapterViewBase {
 
     companion object {
-        @JvmField @Suppress("unused")
         val CREATOR = createParcel { RedditEntry(it) }
     }
 

@@ -3,8 +3,12 @@ package com.gilka.scubareddit.custom
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
-class LoadMoreScrollListener(private val loadMoreCallback: () -> Unit,
+class LoadMoreScrollListener(private val listener: onLoadMoreNeededListener,
                              val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
+
+    interface onLoadMoreNeededListener {
+        fun onLoadMoreNeeded()
+    }
 
     private var isLoading = true
     private var loadedSoFar = 0
@@ -12,7 +16,7 @@ class LoadMoreScrollListener(private val loadMoreCallback: () -> Unit,
 
     private var firstVisible = 0
     private var visibleItemsCount = 0
-    private var threshold = 12
+    private var threshold = 5
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -32,7 +36,7 @@ class LoadMoreScrollListener(private val loadMoreCallback: () -> Unit,
         }
 
         if ((totalItemsCount - visibleItemsCount) <= (firstVisible + threshold)) { // need to load more
-            loadMoreCallback()
+            listener?.onLoadMoreNeeded()
             isLoading = true
         }
     }

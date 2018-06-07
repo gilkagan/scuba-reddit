@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +21,11 @@ import com.gilka.scubareddit.viewentry.ViewEntryActivity
 import kotlinx.android.synthetic.main.fragment_listing.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import android.support.v7.widget.LinearSnapHelper
+import com.gilka.scubareddit.custom.LoadMoreScrollListener.onLoadMoreNeededListener
 
-class ListingFragment : BaseFragment(), ListingAdapter.OnItemClickListener {
+
+class ListingFragment : BaseFragment(), ListingAdapter.OnItemClickListener, onLoadMoreNeededListener {
 
     companion object {
         private const val TAG_LISTING = "redditListing"
@@ -47,8 +49,10 @@ class ListingFragment : BaseFragment(), ListingAdapter.OnItemClickListener {
             rvListing.setHasFixedSize(true)
             val linearLayout = LinearLayoutManager(context)
             rvListing.layoutManager = linearLayout
-            rvListing.addOnScrollListener(LoadMoreScrollListener({ this.getMoreEntries() }, linearLayout))
+            rvListing.addOnScrollListener(LoadMoreScrollListener(this, linearLayout))
 
+            val snapHelper = LinearSnapHelper()
+            snapHelper.attachToRecyclerView(rvListing)
         }
 
         // check if first time
@@ -85,6 +89,10 @@ class ListingFragment : BaseFragment(), ListingAdapter.OnItemClickListener {
                         }
                 )
         subscriptions.add(subscription)
+    }
+
+    override fun onLoadMoreNeeded() {
+        getMoreEntries()
     }
 
     override fun onItemClick(item: AdapterViewBase) {
