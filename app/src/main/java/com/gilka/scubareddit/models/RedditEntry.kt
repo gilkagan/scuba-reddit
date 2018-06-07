@@ -2,7 +2,6 @@ package com.gilka.scubareddit.models
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.gilka.scubareddit.createParcel
 
 data class RedditEntry(
         val title: String,
@@ -10,8 +9,14 @@ data class RedditEntry(
         val url: String
 ) : Parcelable, AdapterViewBase {
 
-    companion object {
-        val CREATOR = createParcel { RedditEntry(it) }
+    companion object CREATOR : Parcelable.Creator<RedditEntry> {
+        override fun createFromParcel(parcel: Parcel): RedditEntry {
+            return RedditEntry(parcel)
+        }
+
+        override fun newArray(size: Int): Array<RedditEntry?> {
+            return arrayOfNulls(size)
+        }
     }
 
     protected constructor(parcelIn: Parcel) : this(

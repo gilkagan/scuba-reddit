@@ -2,15 +2,20 @@ package com.gilka.scubareddit.models
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.gilka.scubareddit.createParcel
 
 data class RedditListing(
         val after: String,
         val before: String,
         val entries: List<RedditEntry>) : Parcelable {
 
-    companion object {
-        val CREATOR = createParcel { RedditListing(it) }
+    companion object CREATOR : Parcelable.Creator<RedditListing> {
+        override fun createFromParcel(parcel: Parcel): RedditListing {
+            return RedditListing(parcel)
+        }
+
+        override fun newArray(size: Int): Array<RedditListing?> {
+            return arrayOfNulls(size)
+        }
     }
 
     protected constructor(parcelIn: Parcel) : this(

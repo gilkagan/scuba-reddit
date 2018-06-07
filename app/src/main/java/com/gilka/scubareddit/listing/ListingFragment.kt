@@ -25,7 +25,9 @@ import android.support.v7.widget.LinearSnapHelper
 import com.gilka.scubareddit.custom.LoadMoreScrollListener.onLoadMoreNeededListener
 
 
-class ListingFragment : BaseFragment(), ListingAdapter.OnItemClickListener, onLoadMoreNeededListener {
+class ListingFragment : BaseFragment(),
+                        ListingAdapter.OnItemClickListener,
+                        onLoadMoreNeededListener {
 
     companion object {
         private const val TAG_LISTING = "redditListing"
@@ -93,12 +95,18 @@ class ListingFragment : BaseFragment(), ListingAdapter.OnItemClickListener, onLo
 
     override fun onLoadMoreNeeded() {
         getMoreEntries()
+
+        if (rvListing.adapter.itemCount > 50) {
+            val adapter = rvListing.adapter as ListingAdapter
+            adapter.filter.filter("scuba")
+        }
     }
 
     override fun onItemClick(item: AdapterViewBase) {
         if (item is RedditEntry) {
-            val intent = Intent(activity, ViewEntryActivity::class.java)
-            intent.putExtra(ViewEntryActivity.EXTRA_URL, item.url)
+            //val intent = Intent(activity, ViewEntryActivity::class.java)
+            //intent.putExtra(ViewEntryActivity.EXTRA_URL, item.url)
+            val intent = ViewEntryActivity.newIntent(context!!, item)
             startActivity(intent)
         }
     }

@@ -3,6 +3,8 @@ package com.gilka.scubareddit.listing
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import com.gilka.scubareddit.models.AdapterViewBase
 import com.gilka.scubareddit.models.LoadingEntry
 import com.gilka.scubareddit.models.RedditEntry
@@ -10,7 +12,7 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager
 import java.util.ArrayList
 
 
-class ListingAdapter(activity: Activity, private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ListingAdapter(activity: Activity, private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
     interface OnItemClickListener {
         fun onItemClick(item: AdapterViewBase)
@@ -18,12 +20,14 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
 
     private var delegatesManager: AdapterDelegatesManager<List<AdapterViewBase>> = AdapterDelegatesManager()
     private var entries: ArrayList<AdapterViewBase>
+    private var allEntries : ArrayList<AdapterViewBase>
 
     init {
         delegatesManager.addDelegate(EntryAdapterDelegate(activity))
         delegatesManager.addDelegate(LoadingAdapterDelegate(activity))
 
         entries = ArrayList()
+        allEntries = ArrayList()
         addLoading()
     }
 
@@ -48,6 +52,25 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
         })
     }
 
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
+                val filterResults = Filter.FilterResults()
+                if (constraint != null) {
+                    val filtered = getFilteredEntries(constraint)
+                    filterResults.values = filtered
+                    filterResults.count = filtered.size
+                }
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?,
+                                        results: Filter.FilterResults?) = when {
+                results?.count ?: -1 > 0 -> notifyDataSetChanged()
+                else -> notifyDataSetChanged()
+            }
+        }
+    }
 
     fun setInitialEntries(initialItems: List<RedditEntry>) {
         val lastIndex = entries.size - 1
@@ -70,11 +93,20 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
         entries.addAll(newEntries)
         addLoading()
         notifyItemRangeChanged(lastIndex, entries.size + 1)
+
+        allEntries.clear()
+        allEntries.addAll(entries)
     }
 
     fun getCurrentEntries() : List<RedditEntry> {
         return entries
                 .filter { it -> it is RedditEntry }
+                .map { it as RedditEntry }
+    }
+
+    fun getFilteredEntries(constraint : CharSequence) : List<RedditEntry> {
+        return allEntries
+                .filter { it -> it is RedditEntry && it.title.contains(constraint, true) }
                 .map { it as RedditEntry }
     }
 }

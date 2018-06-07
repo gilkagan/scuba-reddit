@@ -52,20 +52,18 @@ class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         val searchView = menu.findItem(R.id.action_filter).actionView as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 
-        searchView.setMaxWidth(Integer.MAX_VALUE)
-        searchView.setFocusable(true)
-        searchView.setIconified(false)
-        searchView.setSubmitButtonEnabled(true)
+        searchView.isFocusable = true
+        searchView.isSubmitButtonEnabled = true
+        searchView.maxWidth = Integer.MAX_VALUE
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                //AppData.getInstance().publishFilter(query)
-                //removeFocusFromSearchView()
+
                 return true
             }
 
             override fun onQueryTextChange(query: String): Boolean {
-                //AppData.getInstance().publishFilter(query)
+
                 return false
             }
         })
