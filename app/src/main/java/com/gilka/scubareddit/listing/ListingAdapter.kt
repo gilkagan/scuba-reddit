@@ -12,7 +12,7 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager
 import java.util.ArrayList
 
 
-class ListingAdapter(activity: Activity, private val clickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
+class ListingAdapter(activity: Activity, private val clickListener: OnItemClickListener, val usePaging : Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
     interface OnItemClickListener {
         fun onItemClick(item: AdapterViewBase)
@@ -20,14 +20,12 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
 
     private var delegatesManager: AdapterDelegatesManager<List<AdapterViewBase>> = AdapterDelegatesManager()
     private var entries: ArrayList<AdapterViewBase>
-    private var allEntries : ArrayList<AdapterViewBase>
 
     init {
         delegatesManager.addDelegate(EntryAdapterDelegate(activity))
         delegatesManager.addDelegate(LoadingAdapterDelegate(activity))
 
         entries = ArrayList()
-        allEntries = ArrayList()
         addLoading()
     }
 
@@ -82,8 +80,11 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
 
     fun loadMoreEntries(newEntries: List<RedditEntry>) {
         val lastIndex = entries.size - 1 // loading index
-        removeLoading()
-        notifyItemRemoved(lastIndex)
+
+        if (usePaging) {
+            removeLoading()
+            notifyItemRemoved(lastIndex)
+        }
 
         addEntries(newEntries)
     }
@@ -91,21 +92,23 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
     private fun addEntries(newEntries: List<RedditEntry>) {
         val lastIndex = entries.size - 1
         entries.addAll(newEntries)
-        addLoading()
-        notifyItemRangeChanged(lastIndex, entries.size + 1)
 
-        allEntries.clear()
-        allEntries.addAll(entries)
+        var newLast = entries.size
+        if (usePaging) {
+            addLoading()
+            newLast++
+        }
+        notifyItemRangeChanged(lastIndex, newLast)
     }
 
-    fun getCurrentEntries() : List<RedditEntry> {
+    fun getEntries() : List<RedditEntry> {
         return entries
                 .filter { it -> it is RedditEntry }
                 .map { it as RedditEntry }
     }
 
-    fun getFilteredEntries(constraint : CharSequence) : List<RedditEntry> {
-        return allEntries
+    private fun getFilteredEntries(constraint : CharSequence) : List<RedditEntry> {
+        return entries
                 .filter { it -> it is RedditEntry && it.title.contains(constraint, true) }
                 .map { it as RedditEntry }
     }

@@ -4,16 +4,17 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.gilka.scubareddit.favorites.FavoritesFragment
+import com.gilka.scubareddit.channel.ChannelFragment
 import com.gilka.scubareddit.listing.ListingFragment
 
 class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return ListingFragment()
+            0 -> return ChannelFragment()
             1 -> return FavoritesFragment()
         }
-        return ListingFragment()
+        return ChannelFragment()
     }
 
     override fun getCount(): Int {
@@ -22,7 +23,7 @@ class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getPageTitle(position: Int): CharSequence? {
         when (position) {
-            0 -> return "Reddit"
+            0 -> return "Channel"
             1 -> return "Favorites"
         }
         return ""

@@ -4,27 +4,22 @@ package com.gilka.scubareddit.listing
 import android.app.Activity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearSnapHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-
 import com.gilka.scubareddit.R
-import com.gilka.scubareddit.data.RedditDataManager
 import com.gilka.scubareddit.base.BaseFragment
 import com.gilka.scubareddit.custom.LoadMoreScrollListener
+import com.gilka.scubareddit.custom.LoadMoreScrollListener.onLoadMoreNeededListener
 import com.gilka.scubareddit.models.AdapterViewBase
 import com.gilka.scubareddit.models.RedditEntry
 import com.gilka.scubareddit.models.RedditListing
 import com.gilka.scubareddit.viewentry.ViewEntryActivity
 import kotlinx.android.synthetic.main.fragment_listing.*
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import android.support.v7.widget.LinearSnapHelper
-import com.gilka.scubareddit.custom.LoadMoreScrollListener.onLoadMoreNeededListener
 
 
-class ListingFragment : BaseFragment(),
+abstract class BaseListingFragment : BaseFragment(),
                         ListingAdapter.OnItemClickListener,
                         onLoadMoreNeededListener {
 
@@ -32,12 +27,10 @@ class ListingFragment : BaseFragment(),
         private const val TAG_LISTING = "redditListing"
     }
 
-    private var redditListing: RedditListing? = null
-    private val dataManager by lazy { RedditDataManager(getString(R.string.reddit_name)) }
+    open var redditListing: RedditListing? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_listing, container, false)
     }
 
@@ -46,11 +39,14 @@ class ListingFragment : BaseFragment(),
 
         // initAdapter
         if (rvListing.adapter == null) {
-            rvListing.adapter = ListingAdapter(activity as Activity, this, true)
+            rvListing.adapter = ListingAdapter(activity as Activity, this, usePaging())
             rvListing.setHasFixedSize(true)
             val linearLayout = LinearLayoutManager(context)
             rvListing.layoutManager = linearLayout
-            rvListing.addOnScrollListener(LoadMoreScrollListener(this, linearLayout))
+
+            if (usePaging()) {
+                rvListing.addOnScrollListener(LoadMoreScrollListener(this, linearLayout))
+            }
 
             val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(rvListing)
@@ -73,32 +69,12 @@ class ListingFragment : BaseFragment(),
         }
     }
 
-    private fun getMoreEntries() {
-        val subscription = dataManager
-                .getListing(redditListing?.after ?: "")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe (
-                        { fetched ->
-                            redditListing = fetched
-                            (rvListing.adapter as ListingAdapter).loadMoreEntries(fetched.entries)
-                        },
-                        { e ->
-                            if (view != null) {
-                                Toast.makeText(activity!!, e.message, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                )
-        subscriptions.add(subscription)
-    }
+    abstract fun getMoreEntries()
+
+    abstract fun usePaging() : Boolean
 
     override fun onLoadMoreNeeded() {
         getMoreEntries()
-
-        if (rvListing.adapter.itemCount > 50) {
-            val adapter = rvListing.adapter as ListingAdapter
-            adapter.filter.filter("scuba")
-        }
     }
 
     override fun onItemClick(item: AdapterViewBase) {

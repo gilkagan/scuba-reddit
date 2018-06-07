@@ -1,4 +1,4 @@
-package com.gilka.scubareddit
+package com.gilka.scubareddit.data
 
 import com.gilka.scubareddit.api.ListingAPI
 import com.gilka.scubareddit.models.RedditEntry

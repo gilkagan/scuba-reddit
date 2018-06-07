@@ -2,10 +2,12 @@ package com.gilka.scubareddit.data
 
 object DataManager {
 
-    var favoritesManager: FavoritesDataManager
+    val favoritesManager: FavoritesDataManager
+    val channelManager : RedditDataManager
 
     init {
         favoritesManager = FavoritesDataManager()
+        channelManager = RedditDataManager("scuba")
     }
 
 }
