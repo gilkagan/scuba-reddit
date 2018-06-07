@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.gilka.scubareddit.favorites.FavoritesFragment
 import com.gilka.scubareddit.channel.ChannelFragment
-import com.gilka.scubareddit.listing.ListingFragment
 
 class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 

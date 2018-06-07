@@ -3,10 +3,10 @@ package com.gilka.scubareddit.custom
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
-class LoadMoreScrollListener(private val listener: onLoadMoreNeededListener,
+class LoadMoreScrollListener(private val listener: OnLoadMoreNeededListener,
                              val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
-    interface onLoadMoreNeededListener {
+    interface OnLoadMoreNeededListener {
         fun onLoadMoreNeeded()
     }
 

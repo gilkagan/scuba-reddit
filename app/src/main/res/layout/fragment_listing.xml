@@ -13,8 +13,7 @@
         android:layout_height="match_parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabScrollToTop"
@@ -24,5 +23,22 @@
         android:src="@drawable/ic_arrow_upward_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/noResultsView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary_light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_items_to_show"
+            android:layout_gravity="center"
+            android:textSize="25sp" />
+
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

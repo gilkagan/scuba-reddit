@@ -12,7 +12,7 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager
 import java.util.ArrayList
 
 
-class ListingAdapter(activity: Activity, private val clickListener: OnItemClickListener, val usePaging : Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
+class ListingAdapter(activity: Activity, private val clickListener: OnItemClickListener, val usePaging : Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(item: AdapterViewBase)
@@ -28,10 +28,6 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
         entries = ArrayList()
         addLoading()
     }
-
-    private fun addLoading() = entries.add(LoadingEntry())
-
-    private fun removeLoading() = entries.removeAt(entries.size - 1)
 
     override fun getItemCount() = entries.size
 
@@ -50,55 +46,32 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
         })
     }
 
-    override fun getFilter(): Filter {
-        return object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
-                val filterResults = Filter.FilterResults()
-                if (constraint != null) {
-                    val filtered = getFilteredEntries(constraint)
-                    filterResults.values = filtered
-                    filterResults.count = filtered.size
-                }
-                return filterResults
-            }
-
-            override fun publishResults(constraint: CharSequence?,
-                                        results: Filter.FilterResults?) = when {
-                results?.count ?: -1 > 0 -> notifyDataSetChanged()
-                else -> notifyDataSetChanged()
-            }
-        }
+    private fun addLoading() {
+        if (!usePaging) return
+        entries.add(LoadingEntry())
+        notifyItemInserted(itemCount - 1)
     }
 
-    fun setInitialEntries(initialItems: List<RedditEntry>) {
-        val lastIndex = entries.size
+    private fun removeLoading() {
+        if (!usePaging || itemCount == 0) return
+        val lastIndex = itemCount - 1
+        entries.removeAt(lastIndex)
+        notifyItemRemoved(lastIndex)
+    }
+
+    fun clearEntries() {
+        if (itemCount == 0) return
+        val count = itemCount
         entries.clear()
-        notifyItemRangeRemoved(0, lastIndex)
-
-        addEntries(initialItems)
+        notifyItemRangeRemoved(0, count)
     }
 
-    fun loadMoreEntries(newEntries: List<RedditEntry>) {
-        val lastIndex = entries.size
-
-        if (usePaging) {
-            removeLoading()
-            notifyItemRemoved(lastIndex)
-        }
-
-        addEntries(newEntries)
-    }
-
-    private fun addEntries(newEntries: List<RedditEntry>) {
-        val lastIndex = entries.size
+    fun loadEntries(newEntries: List<RedditEntry>) {
+        removeLoading()
+        val firstNewIndex = itemCount
         entries.addAll(newEntries)
-
-        var newLast = entries.size
-        if (usePaging) {
-            addLoading()
-            newLast++
-        }
-        notifyItemRangeInserted(lastIndex, newLast)
+        notifyItemRangeInserted(firstNewIndex, newEntries.size)
+        addLoading()
     }
 
     fun getEntries() : List<RedditEntry> {

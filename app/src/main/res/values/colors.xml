@@ -5,7 +5,7 @@
     <color name="primary_light">#D1C4E9</color>
     <color name="accent">#FF5722</color>
     <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
+    <color name="secondary_text">#B5B5B5</color>
     <color name="text">@android:color/white</color>
     <color name="icons">@android:color/white</color>
     <color name="divider">#BDBDBD</color>

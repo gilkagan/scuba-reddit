@@ -19,7 +19,7 @@ class ChannelFragment : BaseListingFragment() {
                 .subscribe(
                         { fetched ->
                             redditListing = fetched
-                            (rvListing.adapter as ListingAdapter).loadMoreEntries(fetched.entries)
+                            (rvListing.adapter as ListingAdapter).loadEntries(fetched.entries)
                         },
                         { e ->
                             if (view != null) {

@@ -2,6 +2,7 @@ package com.gilka.scubareddit.listing
 
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
@@ -11,7 +12,7 @@ import android.view.ViewGroup
 import com.gilka.scubareddit.R
 import com.gilka.scubareddit.base.BaseFragment
 import com.gilka.scubareddit.custom.LoadMoreScrollListener
-import com.gilka.scubareddit.custom.LoadMoreScrollListener.onLoadMoreNeededListener
+import com.gilka.scubareddit.custom.LoadMoreScrollListener.OnLoadMoreNeededListener
 import com.gilka.scubareddit.models.AdapterViewBase
 import com.gilka.scubareddit.models.RedditEntry
 import com.gilka.scubareddit.models.RedditListing
@@ -21,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_listing.*
 
 abstract class BaseListingFragment : BaseFragment(),
                         ListingAdapter.OnItemClickListener,
-                        onLoadMoreNeededListener {
+                        OnLoadMoreNeededListener {
 
     companion object {
         private const val TAG_LISTING = "redditListing"
@@ -59,7 +60,7 @@ abstract class BaseListingFragment : BaseFragment(),
         // check if first time
         if (savedInstanceState != null && savedInstanceState.containsKey(TAG_LISTING)) {
             redditListing = savedInstanceState.get(TAG_LISTING) as RedditListing
-            (rvListing.adapter as ListingAdapter).setInitialEntries(redditListing!!.entries)
+            (rvListing.adapter as ListingAdapter).loadEntries(redditListing!!.entries)
         } else {
             getMoreEntries()
         }
@@ -84,7 +85,7 @@ abstract class BaseListingFragment : BaseFragment(),
     override fun onItemClick(item: AdapterViewBase) {
         if (item is RedditEntry) {
             val intent = ViewEntryActivity.newIntent(context!!, item)
-            startActivity(intent)
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle())
         }
     }
 

@@ -18,7 +18,8 @@ class FavoritesFragment : BaseListingFragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { favorites ->
-                            (rvListing.adapter as ListingAdapter).setInitialEntries(favorites)
+                            (rvListing.adapter as ListingAdapter).clearEntries()
+                            (rvListing.adapter as ListingAdapter).loadEntries(favorites)
                         },
                         { e ->
                             if (view != null) {
