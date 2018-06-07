@@ -19,7 +19,7 @@
     <com.gilka.scubareddit.custom.NonSwipeableViewPager
         android:id="@+id/vpContainer"
         android:background="@color/cardview_dark_background"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="0dp" />

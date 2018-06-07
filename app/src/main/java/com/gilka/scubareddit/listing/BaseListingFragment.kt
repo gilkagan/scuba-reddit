@@ -52,6 +52,10 @@ abstract class BaseListingFragment : BaseFragment(),
             snapHelper.attachToRecyclerView(rvListing)
         }
 
+        fabScrollToTop.setOnClickListener({
+            rvListing.scrollToPosition(0)
+        })
+
         // check if first time
         if (savedInstanceState != null && savedInstanceState.containsKey(TAG_LISTING)) {
             redditListing = savedInstanceState.get(TAG_LISTING) as RedditListing

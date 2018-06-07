@@ -71,7 +71,7 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
     }
 
     fun setInitialEntries(initialItems: List<RedditEntry>) {
-        val lastIndex = entries.size - 1
+        val lastIndex = entries.size
         entries.clear()
         notifyItemRangeRemoved(0, lastIndex)
 
@@ -79,7 +79,7 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
     }
 
     fun loadMoreEntries(newEntries: List<RedditEntry>) {
-        val lastIndex = entries.size - 1 // loading index
+        val lastIndex = entries.size
 
         if (usePaging) {
             removeLoading()
@@ -90,7 +90,7 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
     }
 
     private fun addEntries(newEntries: List<RedditEntry>) {
-        val lastIndex = entries.size - 1
+        val lastIndex = entries.size
         entries.addAll(newEntries)
 
         var newLast = entries.size
@@ -98,7 +98,7 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
             addLoading()
             newLast++
         }
-        notifyItemRangeChanged(lastIndex, newLast)
+        notifyItemRangeInserted(lastIndex, newLast)
     }
 
     fun getEntries() : List<RedditEntry> {

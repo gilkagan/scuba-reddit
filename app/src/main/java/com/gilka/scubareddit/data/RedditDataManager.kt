@@ -15,7 +15,7 @@ class RedditDataManager(private val reddit: String, private val api: ListingAPI 
             val response = callResponse.execute()
 
             if (response.isSuccessful) {
-                val news = response.body().data.children.map {
+                val entries = response.body().data.children.map {
                     val item = it.data
                     RedditEntry(item.title, item.thumbnail, item.url)
                 }
@@ -23,7 +23,7 @@ class RedditDataManager(private val reddit: String, private val api: ListingAPI 
                         RedditListing(
                                 response.body().data.after ?: "",
                                 response.body().data.before ?: "",
-                                news))
+                                entries))
                 subscriber.onCompleted()
             } else {
                 subscriber.onError(Throwable(response.message()))
