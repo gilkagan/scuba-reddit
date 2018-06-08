@@ -8,6 +8,8 @@ interface Presenter {
 
     fun getEntries(channel: String, afterTag: String)
 
+    fun filterRequested(filter: String)
+
     fun entryClicked(entry: RedditEntry)
 
     fun scrollToTopClicked()

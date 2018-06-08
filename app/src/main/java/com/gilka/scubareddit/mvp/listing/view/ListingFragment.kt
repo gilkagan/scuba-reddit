@@ -6,6 +6,7 @@ import com.gilka.scubareddit.models.RedditEntry
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
+import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,6 +63,17 @@ class ListingFragment :
             presenter.scrollToTopClicked()
         })
 
+        filter.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                presenter.filterRequested(query)
+                return false
+            }
+        })
+
         if (savedInstanceState != null && savedInstanceState.containsKey(ListingFragment.TAG_LISTING)) {
             val values = savedInstanceState.getParcelableArrayList<RedditEntry>(ListingFragment.TAG_LISTING)
             entries.clear()
@@ -109,6 +121,14 @@ class ListingFragment :
         this.afterTag = afterTag
         this.entries.addAll(entries)
         adapter.notifyItemRangeInserted(lastCount, entries.size)
+    }
+
+    override fun onFilter(entries: List<RedditEntry>) {
+        val lastCount = adapter.itemCount
+        this.entries.clear()
+        adapter.notifyItemRangeRemoved(0, lastCount)
+        this.entries.addAll(entries)
+        adapter.notifyItemRangeInserted(0, entries.size)
     }
 
     override fun onLoadFail(throwable: Throwable) {

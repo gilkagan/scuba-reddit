@@ -14,5 +14,7 @@ interface View {
 
     fun onLoadSuccess(entries: List<RedditEntry>, afterTag: String)
 
+    fun onFilter(entries: List<RedditEntry>)
+
     fun onLoadFail(throwable: Throwable)
 }

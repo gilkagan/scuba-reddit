@@ -9,9 +9,13 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class ListingModel : com.gilka.scubareddit.mvp.listing.contracts.Model {
+class ListingModel : Model {
 
-    override fun getRedditEntries(onFinishedListener: Model.OnFinishedListener, channel: String, afterTag: String) {
+    private var savedEntries = ArrayList<RedditEntry>()
+    private var savedAfter : String = ""
+    private var savedFilter : String = ""
+
+    override fun getRedditEntries(onFinishedListener: Model.OnGetEntriesFinishedListener, channel: String, afterTag: String) {
 
         val api = RedditRestAPI()
         val call = api.getListing(channel, afterTag, "25")
@@ -23,7 +27,11 @@ class ListingModel : com.gilka.scubareddit.mvp.listing.contracts.Model {
                 }
 
                 val after = response.body().data.after
-                onFinishedListener.onFinished(entries, after!!)
+                savedEntries.addAll(entries)
+                savedAfter = after
+
+                val filtered = filterList(entries, savedFilter)
+                onFinishedListener.onFinished(filtered, after)
             }
 
             override fun onFailure(call: Call<RedditListingResponse>?, t: Throwable) {
@@ -31,5 +39,15 @@ class ListingModel : com.gilka.scubareddit.mvp.listing.contracts.Model {
             }
 
         })
+    }
+
+    override fun applyFilter(onFilterFinishedListener: Model.OnFilterFinishedListener, filter: String) {
+        savedFilter = filter
+        val filtered = filterList(savedEntries, savedFilter)
+        onFilterFinishedListener.onFinished(filtered)
+    }
+
+    private fun filterList(original : List<RedditEntry>, filter: String) : ArrayList<RedditEntry> {
+        return original.filter { it -> it.title.contains(filter, true) } as ArrayList<RedditEntry>
     }
 }

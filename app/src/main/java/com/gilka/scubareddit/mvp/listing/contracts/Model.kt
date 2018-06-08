@@ -4,10 +4,17 @@ import com.gilka.scubareddit.models.RedditEntry
 
 interface Model {
 
-    interface OnFinishedListener {
+    interface OnGetEntriesFinishedListener {
         fun onFinished(entries: List<RedditEntry>, afterTag: String)
         fun onFailure(t: Throwable)
     }
 
-    fun getRedditEntries(onFinishedListener: OnFinishedListener, channel: String, afterTag: String)
+    interface OnFilterFinishedListener {
+        fun onFinished(entries: List<RedditEntry>)
+    }
+
+    fun getRedditEntries(onFinishedListener: OnGetEntriesFinishedListener, channel: String, afterTag: String)
+
+    fun applyFilter(onFilterFinishedListener: OnFilterFinishedListener, filter: String)
+
 }

@@ -5,7 +5,9 @@ import com.gilka.scubareddit.mvp.listing.contracts.Model
 import com.gilka.scubareddit.mvp.listing.contracts.Presenter
 import com.gilka.scubareddit.mvp.listing.contracts.View
 
-class ListingPresenter(var view: View?) : Presenter, Model.OnFinishedListener {
+class ListingPresenter(var view: View?) : Presenter,
+        Model.OnGetEntriesFinishedListener,
+        Model.OnFilterFinishedListener {
 
     private val model by lazy { com.gilka.scubareddit.mvp.listing.model.ListingModel() }
 
@@ -14,8 +16,8 @@ class ListingPresenter(var view: View?) : Presenter, Model.OnFinishedListener {
         model.getRedditEntries(this, channel, afterTag)
     }
 
-    override fun onDestroy() {
-        view = null
+    override fun filterRequested(filter: String) {
+        model.applyFilter(this, filter)
     }
 
     override fun entryClicked(entry: RedditEntry) {
@@ -26,9 +28,17 @@ class ListingPresenter(var view: View?) : Presenter, Model.OnFinishedListener {
         view?.scrollToTop()
     }
 
+    override fun onDestroy() {
+        view = null
+    }
+
     override fun onFinished(entries: List<RedditEntry>, afterTag: String) {
         view?.onLoadSuccess(entries, afterTag)
         view?.hideProgress()
+    }
+
+    override fun onFinished(entries: List<RedditEntry>) {
+        view?.onFilter(entries)
     }
 
     override fun onFailure(t: Throwable) {

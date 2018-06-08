@@ -4,8 +4,8 @@ class RedditListingResponse(val data: RedditDataResponse)
 
 class RedditDataResponse(
         val children: List<RedditChildrenResponse>,
-        val after: String?,
-        val before: String?
+        val after: String,
+        val before: String
 )
 
 class RedditChildrenResponse(val data: RedditListingDataResponse)
