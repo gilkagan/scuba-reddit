@@ -86,6 +86,9 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
 
     fun applyFilter(constraint : CharSequence) {
         if (constraint.isBlank()) {
+            if (allEntries.isEmpty()) {
+                allEntries.addAll(entries)
+            }
             entries.clear()
             entries.addAll(allEntries)
             filtered = false
