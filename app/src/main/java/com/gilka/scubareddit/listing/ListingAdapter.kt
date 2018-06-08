@@ -5,21 +5,24 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import com.gilka.scubareddit.models.AdapterViewBase
+import com.gilka.scubareddit.models.AdapterItemBase
 import com.gilka.scubareddit.models.LoadingEntry
 import com.gilka.scubareddit.models.RedditEntry
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager
 import java.util.ArrayList
 
 
-class ListingAdapter(activity: Activity, private val clickListener: OnItemClickListener, val usePaging : Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ListingAdapter(activity: Activity, private val clickListener: OnItemClickListener, val usePaging : Boolean) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnItemClickListener {
-        fun onItemClick(item: AdapterViewBase)
+        fun onItemClick(item: AdapterItemBase)
     }
 
-    private var delegatesManager: AdapterDelegatesManager<List<AdapterViewBase>> = AdapterDelegatesManager()
-    private var entries: ArrayList<AdapterViewBase>
+    private var delegatesManager: AdapterDelegatesManager<List<AdapterItemBase>> = AdapterDelegatesManager()
+    private var entries: ArrayList<AdapterItemBase> = ArrayList()
+    private var allEntries: ArrayList<AdapterItemBase> = ArrayList()
+    private var filtered: Boolean = false
 
     init {
         delegatesManager.addDelegate(EntryAdapterDelegate(activity))
@@ -74,15 +77,28 @@ class ListingAdapter(activity: Activity, private val clickListener: OnItemClickL
         addLoading()
     }
 
-    fun getEntries() : List<RedditEntry> {
+    fun getEntries() : ArrayList<RedditEntry> {
         return entries
                 .filter { it -> it is RedditEntry }
                 .map { it as RedditEntry }
+        as ArrayList<RedditEntry>
     }
 
-    private fun getFilteredEntries(constraint : CharSequence) : List<RedditEntry> {
-        return entries
-                .filter { it -> it is RedditEntry && it.title.contains(constraint, true) }
-                .map { it as RedditEntry }
+    fun applyFilter(constraint : CharSequence) {
+        if (constraint.isBlank()) {
+            entries.clear()
+            entries.addAll(allEntries)
+            filtered = false
+        } else {
+            if (!filtered) {
+                allEntries.clear()
+                allEntries.addAll(entries)
+            }
+            filtered = true
+            entries = allEntries.filter { it -> it is RedditEntry && it.title.contains(constraint, true) }
+                    .map { it } as ArrayList<AdapterItemBase>
+        }
+        notifyDataSetChanged()
     }
+
 }

@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
@@ -13,13 +13,6 @@
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowEnterTransition">@android:transition/slide_bottom</item>
         <item name="android:windowExitTransition">@android:transition/slide_top</item>
-    </style>
-
-    <style name="AppTheme.Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/primary_dark</item>
-        <item name="android:minHeight">?attr/actionBarSize</item>
-        <item name="searchViewStyle">@style/AppTheme.Toolbar.SearchView</item>
-        <item name="android:editTextColor">@color/text</item>
     </style>
 
     <style name="AppTheme.Toolbar.SearchView" parent="Widget.AppCompat.SearchView">

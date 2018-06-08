@@ -7,12 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.gilka.scubareddit.R
-import com.gilka.scubareddit.models.AdapterViewBase
+import com.gilka.scubareddit.models.AdapterItemBase
 import com.gilka.scubareddit.models.LoadingEntry
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 
 
-class LoadingAdapterDelegate(activity: Activity) : AdapterDelegate<List<AdapterViewBase>>() {
+class LoadingAdapterDelegate(activity: Activity) : AdapterDelegate<List<AdapterItemBase>>() {
 
     private val inflater: LayoutInflater
 
@@ -20,7 +20,7 @@ class LoadingAdapterDelegate(activity: Activity) : AdapterDelegate<List<AdapterV
         inflater = activity.layoutInflater
     }
 
-    override fun isForViewType(items: List<AdapterViewBase>, position: Int): Boolean {
+    override fun isForViewType(items: List<AdapterItemBase>, position: Int): Boolean {
         return items[position] is LoadingEntry
     }
 
@@ -28,7 +28,7 @@ class LoadingAdapterDelegate(activity: Activity) : AdapterDelegate<List<AdapterV
         return LoadingViewHolder(inflater.inflate(R.layout.row_item_loading, parent, false))
     }
 
-    override fun onBindViewHolder(items: List<AdapterViewBase>, position: Int,
+    override fun onBindViewHolder(items: List<AdapterItemBase>, position: Int,
                                   holder: RecyclerView.ViewHolder, @Nullable payloads: List<Any>) {
     }
 

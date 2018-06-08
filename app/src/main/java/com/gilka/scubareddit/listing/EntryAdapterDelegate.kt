@@ -10,12 +10,12 @@ import android.view.View
 import android.widget.ImageView
 import com.gilka.scubareddit.R
 import com.gilka.scubareddit.loadImg
-import com.gilka.scubareddit.models.AdapterViewBase
+import com.gilka.scubareddit.models.AdapterItemBase
 import com.gilka.scubareddit.models.RedditEntry
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate
 
 
-class EntryAdapterDelegate(activity: Activity) : AdapterDelegate<List<AdapterViewBase>>() {
+class EntryAdapterDelegate(activity: Activity) : AdapterDelegate<List<AdapterItemBase>>() {
 
     private val inflater: LayoutInflater
 
@@ -23,7 +23,7 @@ class EntryAdapterDelegate(activity: Activity) : AdapterDelegate<List<AdapterVie
         inflater = activity.layoutInflater
     }
 
-    override fun isForViewType(items: List<AdapterViewBase>, position: Int): Boolean {
+    override fun isForViewType(items: List<AdapterItemBase>, position: Int): Boolean {
         return items[position] is RedditEntry
     }
 
@@ -31,7 +31,7 @@ class EntryAdapterDelegate(activity: Activity) : AdapterDelegate<List<AdapterVie
         return EntryViewHolder(inflater.inflate(R.layout.row_item_entry, parent, false))
     }
 
-    override fun onBindViewHolder(items: List<AdapterViewBase>, position: Int,
+    override fun onBindViewHolder(items: List<AdapterItemBase>, position: Int,
                                   holder: RecyclerView.ViewHolder, @Nullable payloads: List<Any>) {
 
         val vh = holder as EntryViewHolder

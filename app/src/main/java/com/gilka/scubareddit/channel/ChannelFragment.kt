@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.fragment_listing.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class ChannelFragment : BaseListingFragment() {
+class ChannelFragment : BaseListingFragment(true, true) {
 
     override fun getMoreEntries() {
         val subscription = DataManager.channelManager
@@ -29,6 +29,4 @@ class ChannelFragment : BaseListingFragment() {
                 )
         subscriptions.add(subscription)
     }
-
-    override fun usePaging() = true
 }

@@ -29,6 +29,4 @@ class FavoritesFragment : BaseListingFragment() {
                 )
         subscriptions.add(subscription)
     }
-
-    override fun usePaging() = false
 }

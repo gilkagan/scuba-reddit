@@ -7,7 +7,7 @@ data class RedditEntry(
         val title: String,
         val thumbnail: String,
         val url: String
-) : Parcelable, AdapterViewBase {
+) : Parcelable, AdapterItemBase {
 
     companion object CREATOR : Parcelable.Creator<RedditEntry> {
         override fun createFromParcel(parcel: Parcel): RedditEntry {

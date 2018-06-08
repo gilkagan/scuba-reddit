@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".home.HomeActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:theme="@style/AppTheme.Toolbar"
-        android:contentInsetLeft="0dp"
-        android:contentInsetStart="0dp"
-        android:contentInsetRight="0dp"
-        android:contentInsetEnd="0dp"/>
-
     <com.gilka.scubareddit.custom.NonSwipeableViewPager
         android:id="@+id/vpContainer"
         android:background="@color/cardview_dark_background"
@@ -23,7 +13,6 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
-
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigationView"
