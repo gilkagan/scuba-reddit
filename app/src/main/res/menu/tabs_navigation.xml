@@ -10,4 +10,11 @@
         android:icon="@drawable/ic_favorite_black_24dp"
         android:title="@string/tabs_favorites" />
 
+    <item
+        android:id="@+id/action_mvp"
+        android:icon="@drawable/ic_adb_black_24dp"
+        android:title="@string/tabs_mvp" />
+
+
+
 </menu>

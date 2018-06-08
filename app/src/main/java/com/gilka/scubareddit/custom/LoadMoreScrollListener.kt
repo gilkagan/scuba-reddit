@@ -16,7 +16,7 @@ class LoadMoreScrollListener(private val listener: OnLoadMoreNeededListener,
 
     private var firstVisible = 0
     private var visibleItemsCount = 0
-    private var threshold = 5
+    private var threshold = 10
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)

@@ -45,6 +45,7 @@ abstract class BaseListingFragment(private val usePaging: Boolean = false, priva
         // initAdapter
         if (rvListing.adapter == null) {
             rvListing.adapter = adapter
+
             rvListing.setHasFixedSize(true)
             val linearLayout = LinearLayoutManager(context)
             rvListing.layoutManager = linearLayout
@@ -88,7 +89,7 @@ abstract class BaseListingFragment(private val usePaging: Boolean = false, priva
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val entries = (rvListing.adapter as ListingAdapter).getEntries()
+        val entries = adapter.getEntries()
         if (redditListing != null && entries.isNotEmpty()) {
             outState.putParcelable(TAG_LISTING, redditListing?.copy(entries = entries))
         }
