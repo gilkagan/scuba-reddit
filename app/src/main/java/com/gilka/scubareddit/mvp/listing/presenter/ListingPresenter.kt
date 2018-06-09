@@ -5,15 +5,19 @@ import com.gilka.scubareddit.mvp.listing.contracts.Model
 import com.gilka.scubareddit.mvp.listing.contracts.Presenter
 import com.gilka.scubareddit.mvp.listing.contracts.View
 
-class ListingPresenter(var view: View?) : Presenter,
-        Model.OnGetEntriesFinishedListener,
-        Model.OnFilterFinishedListener {
+class ListingPresenter(var view: View?, channel: String) : Presenter,
+        Model.OnEntriesReadyListener {
 
-    private val model by lazy { com.gilka.scubareddit.mvp.listing.model.ListingModel() }
+    private val model by lazy { com.gilka.scubareddit.mvp.listing.model.ListingModel(channel) }
 
-    override fun getEntries(channel: String, afterTag: String) {
+    override fun getMoreEntries() {
         view?.showProgress()
-        model.getRedditEntries(this, channel, afterTag)
+        model.getRedditEntries(this)
+    }
+
+    override fun refreshRequested() {
+        view?.showProgress()
+        model.refresh(this)
     }
 
     override fun filterRequested(filter: String) {
@@ -32,16 +36,12 @@ class ListingPresenter(var view: View?) : Presenter,
         view = null
     }
 
-    override fun onFinished(entries: List<RedditEntry>, afterTag: String) {
-        view?.onLoadSuccess(entries, afterTag)
+    override fun onEntriesReady(entries: ArrayList<RedditEntry>) {
+        view?.onDataReady(entries)
         view?.hideProgress()
     }
 
-    override fun onFinished(entries: List<RedditEntry>) {
-        view?.onFilter(entries)
-    }
-
     override fun onFailure(t: Throwable) {
-        view?.onLoadFail(t)
+        view?.onDataFail(t)
     }
 }

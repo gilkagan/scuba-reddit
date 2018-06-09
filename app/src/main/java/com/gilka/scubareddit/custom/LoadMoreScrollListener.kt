@@ -40,4 +40,8 @@ class LoadMoreScrollListener(private val listener: OnLoadMoreNeededListener,
             isLoading = true
         }
     }
+
+    fun referesh() {
+        loadedSoFar = 0
+    }
 }

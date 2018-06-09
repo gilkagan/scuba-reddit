@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         when (item.itemId) {
             R.id.action_listing -> showListing()
             R.id.action_favorites -> showFavorites()
-            R.id.action_mvp -> showMVP()
         }
 
         return true
@@ -46,10 +45,6 @@ class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private fun showFavorites() {
         vpContainer.currentItem = 1
-    }
-
-    private fun showMVP() {
-        vpContainer.currentItem = 2
     }
 
 }

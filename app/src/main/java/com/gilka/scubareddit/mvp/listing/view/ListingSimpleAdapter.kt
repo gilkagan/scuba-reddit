@@ -20,7 +20,6 @@ class ListingSimpleAdapter(activity: Activity,
     }
 
     private var delegatesManager: AdapterDelegatesManager<List<AdapterItemBase>> = AdapterDelegatesManager()
-    private var allEntries: ArrayList<RedditEntry> = ArrayList()
 
     init {
         delegatesManager.addDelegate(EntryAdapterDelegate(activity))

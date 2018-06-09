@@ -74,6 +74,8 @@ abstract class BaseListingFragment(private val usePaging: Boolean = false, priva
             }
         })
 
+        swipe_refresher.isEnabled = false
+
         fabScrollToTop.setOnClickListener({
             rvListing.scrollToPosition(0)
         })

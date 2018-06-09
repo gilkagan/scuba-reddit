@@ -6,9 +6,11 @@ interface Presenter {
 
     fun onDestroy()
 
-    fun getEntries(channel: String, afterTag: String)
+    fun getMoreEntries()
 
     fun filterRequested(filter: String)
+
+    fun refreshRequested()
 
     fun entryClicked(entry: RedditEntry)
 

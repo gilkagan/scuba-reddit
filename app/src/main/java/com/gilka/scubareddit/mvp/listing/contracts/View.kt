@@ -12,9 +12,7 @@ interface View {
 
     fun scrollToTop()
 
-    fun onLoadSuccess(entries: List<RedditEntry>, afterTag: String)
+    fun onDataReady(entries: ArrayList<RedditEntry>)
 
-    fun onFilter(entries: List<RedditEntry>)
-
-    fun onLoadFail(throwable: Throwable)
+    fun onDataFail(throwable: Throwable)
 }

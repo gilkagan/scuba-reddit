@@ -30,16 +30,17 @@ class ListingFragment :
 
     private val presenter: Presenter
     private val adapter by lazy { ListingSimpleAdapter((activity as android.app.Activity), entries, this) }
-    private val channel by lazy { resources.getString(R.string.reddit_name) }
-    private var afterTag: String = ""
+    private val channel = "diving"
     private var entries: ArrayList<RedditEntry> = ArrayList()
+    private var loadMoreScrollListener : LoadMoreScrollListener? = null
+    private var isResultChanged : Boolean = false
 
     companion object {
         private const val TAG_LISTING = "redditListing"
     }
 
     init {
-        presenter = ListingPresenter(this)
+        presenter = ListingPresenter(this, channel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +55,8 @@ class ListingFragment :
         val linearLayout = LinearLayoutManager(context)
         rvListing.layoutManager = linearLayout
         rvListing.adapter = adapter
-        rvListing.addOnScrollListener(LoadMoreScrollListener(this, linearLayout))
+        loadMoreScrollListener = LoadMoreScrollListener(this, linearLayout)
+        rvListing.addOnScrollListener(loadMoreScrollListener)
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(rvListing)
@@ -70,8 +72,14 @@ class ListingFragment :
 
             override fun onQueryTextChange(query: String): Boolean {
                 presenter.filterRequested(query)
+                isResultChanged = true
                 return false
             }
+        })
+
+        swipe_refresher.setOnRefreshListener({
+            presenter.refreshRequested()
+            isResultChanged = true
         })
 
         if (savedInstanceState != null && savedInstanceState.containsKey(ListingFragment.TAG_LISTING)) {
@@ -79,9 +87,8 @@ class ListingFragment :
             entries.clear()
             entries.addAll(values)
         } else {
-            presenter.getEntries(channel, "")
+            presenter.getMoreEntries()
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,7 +103,7 @@ class ListingFragment :
     }
 
     override fun onLoadMoreNeeded() {
-        presenter.getEntries(channel, afterTag)
+        presenter.getMoreEntries()
     }
 
     override fun showProgress() {
@@ -116,22 +123,20 @@ class ListingFragment :
         rvListing.scrollToPosition(0)
     }
 
-    override fun onLoadSuccess(entries: List<RedditEntry>, afterTag: String) {
-        val lastCount = adapter.itemCount
-        this.afterTag = afterTag
-        this.entries.addAll(entries)
-        adapter.notifyItemRangeInserted(lastCount, entries.size)
-    }
-
-    override fun onFilter(entries: List<RedditEntry>) {
-        val lastCount = adapter.itemCount
+    override fun onDataReady(entries: ArrayList<RedditEntry>) {
         this.entries.clear()
-        adapter.notifyItemRangeRemoved(0, lastCount)
         this.entries.addAll(entries)
-        adapter.notifyItemRangeInserted(0, entries.size)
+        adapter.notifyDataSetChanged()
+        if (isResultChanged) {
+            // reset listener
+            loadMoreScrollListener?.referesh()
+            swipe_refresher.isRefreshing = false
+            isResultChanged = false
+        }
+
     }
 
-    override fun onLoadFail(throwable: Throwable) {
+    override fun onDataFail(throwable: Throwable) {
         Toast.makeText(activity, throwable.message, Toast.LENGTH_LONG).show()
     }
 

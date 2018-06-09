@@ -9,16 +9,17 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class ListingModel : Model {
+class ListingModel(private val channel: String) : Model {
+
 
     private var savedEntries = ArrayList<RedditEntry>()
     private var savedAfter : String = ""
     private var savedFilter : String = ""
 
-    override fun getRedditEntries(onFinishedListener: Model.OnGetEntriesFinishedListener, channel: String, afterTag: String) {
+    override fun getRedditEntries(onEntriesReadyListener: Model.OnEntriesReadyListener) {
 
         val api = RedditRestAPI()
-        val call = api.getListing(channel, afterTag, "25")
+        val call = api.getListing(channel, savedAfter, "25")
         call.enqueue(object : Callback<RedditListingResponse> {
             override fun onResponse(call: Call<RedditListingResponse>?, response: Response<RedditListingResponse>) {
                 val entries = response.body().data.children.map {
@@ -30,21 +31,27 @@ class ListingModel : Model {
                 savedEntries.addAll(entries)
                 savedAfter = after
 
-                val filtered = filterList(entries, savedFilter)
-                onFinishedListener.onFinished(filtered, after)
+                val filtered = filterList(savedEntries, savedFilter)
+                onEntriesReadyListener.onEntriesReady(filtered)
             }
 
             override fun onFailure(call: Call<RedditListingResponse>?, t: Throwable) {
-                onFinishedListener.onFailure(t)
+                onEntriesReadyListener.onFailure(t)
             }
 
         })
     }
 
-    override fun applyFilter(onFilterFinishedListener: Model.OnFilterFinishedListener, filter: String) {
+    override fun refresh(onEntriesReadyListener: Model.OnEntriesReadyListener) {
+        savedEntries.clear()
+        savedAfter = ""
+        getRedditEntries(onEntriesReadyListener)
+    }
+
+    override fun applyFilter(onEntriesReadyListener: Model.OnEntriesReadyListener, filter: String) {
         savedFilter = filter
         val filtered = filterList(savedEntries, savedFilter)
-        onFilterFinishedListener.onFinished(filtered)
+        onEntriesReadyListener.onEntriesReady(filtered)
     }
 
     private fun filterList(original : List<RedditEntry>, filter: String) : ArrayList<RedditEntry> {

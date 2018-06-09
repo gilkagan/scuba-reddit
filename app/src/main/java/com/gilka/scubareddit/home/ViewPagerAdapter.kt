@@ -11,22 +11,22 @@ class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return ChannelFragment()
+            //0 -> return ChannelFragment()
             1 -> return FavoritesFragment()
-            2 -> return ListingFragment()
+            0 -> return ListingFragment()
         }
-        return ChannelFragment()
+        return ListingFragment()
     }
 
     override fun getCount(): Int {
-        return 3
+        return 2
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
         when (position) {
             0 -> return "Channel"
             1 -> return "Favorites"
-            2 -> return "MVP"
+            //2 -> return "MVP"
         }
         return ""
     }
